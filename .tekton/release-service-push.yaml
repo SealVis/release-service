@@ -2,18 +2,18 @@ apiVersion: tekton.dev/v1
 kind: PipelineRun
 metadata:
   annotations:
-    build.appstudio.openshift.io/repo: https://github.com/konflux-ci/release-service?rev={{revision}}
+    build.appstudio.openshift.io/repo: https://github.com/SealVis/release-service?rev={{revision}}
     build.appstudio.redhat.com/commit_sha: '{{revision}}'
     build.appstudio.redhat.com/target_branch: '{{target_branch}}'
     pipelinesascode.tekton.dev/max-keep-runs: "3"
-    pipelinesascode.tekton.dev/on-cel-expression: event == "push" && target_branch == "main"
+    pipelinesascode.tekton.dev/on-cel-expression: event == "incoming" && target_branch == "rebuild"
   creationTimestamp:
   labels:
     appstudio.openshift.io/application: release-service
     appstudio.openshift.io/component: release-service
     pipelines.appstudio.openshift.io/type: build
   name: release-service-on-push
-  namespace: rhtap-release-2-tenant
+  namespace: release-2-tenant
 spec:
   params:
   - name: dockerfile
@@ -21,7 +21,7 @@ spec:
   - name: git-url
     value: '{{source_url}}'
   - name: output-image
-    value: quay.io/redhat-user-workloads/rhtap-release-2-tenant/release-service/release-service:{{revision}}
+    value: quay.io/sealvis-workloads/release-2-tenant/release-service/release-service:{{revision}}
   - name: path-context
     value: .
   - name: revision
@@ -31,7 +31,6 @@ spec:
   - name: build-platforms
     value:
     - linux/x86_64
-    - linux/arm64
   - name: hermetic
     value: "true"
   - name: prefetch-input
